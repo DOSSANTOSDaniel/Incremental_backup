@@ -27,5 +27,5 @@ daniel@tortue:~$ crontab -l
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-00 18 * * * /home/daniel/incr_backup.sh
+00 18 * * * daniel /home/daniel/incr_backup.sh
 ```
