@@ -32,12 +32,12 @@ error_backup() {
 }
 
 ### Global variables ###
-readonly source_dir="/home/daniel/Documents"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
+readonly source_dir="/home/daniel"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
 readonly source_ip="192.168.1.48"
 readonly source_user="daniel"
 readonly source_port="22"
 
-readonly backup_dir="${HOME}/.backup_PC_desktop"  # Chemin où se trouvent toutes les sauvegardes sur la machine locale.
+readonly backup_dir="${HOME}/.rsync_backups/backup_PC_desktop"  # Chemin où se trouvent toutes les sauvegardes sur la machine locale.
 readonly datetime="$(date '+%Y-%m-%d_%H-%M-%S')"
 readonly backup_path="${backup_dir}/${datetime}"  # Chemin absolu du répertoire de sauvegarde pour chaque sauvegarde sur la machine locale.
 readonly latest_link="${backup_dir}/.latest"      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde sur la machine locale.
