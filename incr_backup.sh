@@ -26,6 +26,10 @@ set -o nounset
 set -o pipefail
 
 ### Fonctions ###
+error_backup() {
+  rm -rf $backup_path
+  exit 0
+}
 
 ### Global variables ###
 readonly source_dir="/home/daniel/Documents"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
@@ -39,6 +43,7 @@ readonly backup_path="${backup_dir}/${datetime}"  # Chemin absolu du répertoire
 readonly latest_link="${backup_dir}/.latest"      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde sur la machine locale.
 
 ### Main ###
+trap error_backup ERR EXIT
 
 mkdir -p "${backup_dir}/logs"
 
