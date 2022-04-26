@@ -43,7 +43,8 @@ readonly backup_path="${backup_dir}/${datetime}"  # Chemin absolu du répertoire
 readonly latest_link="${backup_dir}/.latest"      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde sur la machine locale.
 
 ### Main ###
-trap error_backup ERR EXIT
+# ERR Quand une commande échoue avec un statu autre que 0
+trap error_backup ERR
 
 mkdir -p "${backup_dir}/logs"
 
