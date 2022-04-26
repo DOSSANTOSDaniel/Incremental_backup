@@ -43,22 +43,23 @@ readonly backup_path="${backup_dir}/${datetime}"  # Chemin absolu du répertoire
 readonly latest_link="${backup_dir}/.latest"      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde sur la machine locale.
 
 ### Main ###
-# ERR Quand une commande échoue avec un statu autre que 0
+# ERR : Quand une commande échoue avec un statu autre que 0
 trap error_backup ERR
 
 mkdir -p "${backup_dir}/logs"
 
-# -m
-# --delete
-# --ignore-errors : efface même s'il y a eu des erreurs E/S
-# --link-dest
+# --delete : Les fichiers supprimés sur la source n'apparaitront pas sur la destination.
+# --ignore-errors : Efface même s'il y a eu des erreurs E/S.
+# --link-dest : Répertoire utilisé pour la comparaison avec le répertoire source.
 
-rsync -a -m -e "ssh -p $source_port"\
+rsync -a -e "ssh -p $source_port"\
  --quiet --delete --ignore-errors --link-dest="$latest_link"\
  --exclude={"*~",".cache",".config",".mozilla","*.swp","*.swo"}\
  ${source_user}@${source_ip}:${source_dir}/ $backup_path\
  --log-file="${backup_dir}/logs/${datetime}.log"
 
 rm -rf $latest_link
-sleep 10
+
+sleep 5
+
 ln -s $backup_path $latest_link
