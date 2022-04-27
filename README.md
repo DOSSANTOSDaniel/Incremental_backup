@@ -1,6 +1,8 @@
 # Incremental_backup
 Sauvegarde incrémentielle
 
+![sauvegarde](incr.png)
+
 ## Configuration de cron
 ```
 daniel@tortue:~$ crontab -l
