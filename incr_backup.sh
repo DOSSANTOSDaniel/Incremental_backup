@@ -2,23 +2,29 @@
 #-*- coding: UTF8 -*-
 
 #--------------------------------------------------#
-# Script_Name: incr_backup.bash
+# Script_Name: incr_backup.sh
 #
 # Author:  'dossantosjdf@gmail.com'
-# Date: ven. 22 avril 2022 18:43:30
+# Date: mer. 27 avril 2022 18:43:30
 # Version: 1.0
 # Bash_Version: 5.0.17(1)-release
 #--------------------------------------------------#
 # Description:
-#https://linuxconfig.org/how-to-create-incremental-backups-using-rsync-on-linux
 #
 # Options:
 #
-# Usage: ./incr_backup.bash
+# Usage: ./incr_backup.sh
 #
 # Limits:
 #
 # Licence:
+#
+# Sources:
+# https://se.ifmo.ru/~ad/Documentation/Shells_by_Example/ch12lev1sec9.html
+# https://linuxconfig.org/how-to-create-incremental-backups-using-rsync-on-linux
+# https://www.ionos.fr/digitalguide/serveur/configuration/commande-in-de-linux/
+# man 7 signal
+# man rsync
 #--------------------------------------------------#
 
 set -o errexit
@@ -55,7 +61,7 @@ mkdir -p "${backup_dir}/logs"
 rsync -aq -e "ssh -p $source_port"\
  --quiet --delete --ignore-errors --link-dest="$latest_link"\
  --include={".ssh",".config",".bashrc"}\
- --exclude={"*~",".*","*.swp","*.swo"}\
+ --exclude={"*~",".*"}\
  ${source_user}@${source_ip}:${source_dir}/ $backup_path\
  --log-file="${backup_dir}/logs/${datetime}.log"
 
