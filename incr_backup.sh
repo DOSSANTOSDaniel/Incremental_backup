@@ -32,7 +32,7 @@ error_backup() {
 }
 
 ### Global variables ###
-readonly source_dir="/home/daniel/Images"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
+readonly source_dir="/home/daniel"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
 readonly source_ip="192.168.1.48"
 readonly source_user="daniel"
 readonly source_port="22"
