@@ -54,8 +54,8 @@ mkdir -p "${backup_dir}/logs"
 
 rsync -aq -e "ssh -p $source_port"\
  --quiet --delete --ignore-errors --link-dest="$latest_link"\
- --include={".ssh",".config",".bashrc"}\
- --exclude={"*~",".*"}\
+ --include={".ssh",".bashrc"}\
+ --exclude={"*~",".*","snap"}\
  ${source_user}@${source_ip}:${source_dir}/ $backup_path\
  --log-file="${backup_dir}/logs/${datetime}.log"
 
