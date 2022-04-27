@@ -11,13 +11,7 @@
 #--------------------------------------------------#
 # Description:
 #
-# Options:
-#
 # Usage: ./incr_backup.sh
-#
-# Limits:
-#
-# Licence:
 #
 # Sources:
 # https://se.ifmo.ru/~ad/Documentation/Shells_by_Example/ch12lev1sec9.html
