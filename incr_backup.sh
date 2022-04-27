@@ -32,7 +32,7 @@ error_backup() {
 }
 
 ### Global variables ###
-readonly source_dir="/home/daniel"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
+readonly source_dir="/home/daniel/Images"      # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
 readonly source_ip="192.168.1.48"
 readonly source_user="daniel"
 readonly source_port="22"
@@ -52,9 +52,10 @@ mkdir -p "${backup_dir}/logs"
 # --ignore-errors : Efface même s'il y a eu des erreurs E/S.
 # --link-dest : Répertoire utilisé pour la comparaison avec le répertoire source.
 
-rsync -a -e "ssh -p $source_port"\
+rsync -aq -e "ssh -p $source_port"\
  --quiet --delete --ignore-errors --link-dest="$latest_link"\
- --exclude={"*~",".cache",".config",".mozilla","*.swp","*.swo"}\
+ --include={".ssh",".config",".bashrc"}\
+ --exclude={"*~",".*","*.swp","*.swo"}\
  ${source_user}@${source_ip}:${source_dir}/ $backup_path\
  --log-file="${backup_dir}/logs/${datetime}.log"
 
