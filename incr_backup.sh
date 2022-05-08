@@ -28,6 +28,7 @@ set -o pipefail
 ### Fonctions ###
 error_backup() {
   rm -rf $backup_path
+  logger -t $0 "Rsync_Backup --- Erreur pendant la sauvegarde sur la machine $source_ip !"
   exit 0
 }
 
@@ -38,13 +39,21 @@ readonly source_user="daniel"
 readonly source_port="22"
 
 readonly backup_dir="${HOME}/.rsync_backups/backup_PC_desktop"  # Chemin où se trouvent toutes les sauvegardes sur la machine locale.
-readonly datetime="$(date '+%Y-%m-%d_%H-%M-%S')"
+readonly datetime="$(date '+%Y-%m-%d_%T')"
 readonly backup_path="${backup_dir}/${datetime}"  # Chemin absolu du répertoire de sauvegarde pour chaque sauvegarde sur la machine locale.
 readonly latest_link="${backup_dir}/.latest"      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde sur la machine locale.
 
 ### Main ###
 # ERR : Quand une commande échoue avec un statu autre que 0
 trap error_backup ERR
+
+while ! ping -c 1 -n -w 2 -q $source_ip &> /dev/null
+do
+  logger -t $0 "Rsync_Backup --- la machine $source_ip est DOWN !"
+  sleep 20
+done
+
+logger -t $0 "Rsync_Backup --- Début de la sauvegarde sur la machine $source_ip !"
 
 mkdir -p "${backup_dir}/logs"
 
@@ -64,3 +73,5 @@ rm -rf $latest_link
 sleep 5
 
 ln -s $backup_path $latest_link
+
+logger -t $0 "Rsync_Backup --- Fin de la sauvegarde sur la machine $source_ip !"
