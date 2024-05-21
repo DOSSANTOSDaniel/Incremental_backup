@@ -8,7 +8,7 @@ Voici les différentes fonctions :
   * Création de logs.
   * Mise en place de notifications avec logger.
 
-![sauvegarde](incr.png)
+![sauvegarde](incr_back.png)
 
 Après une sauvegarde complète, les sauvegardes suivantes sauvegarderont seulement les données modifiées ou ajoutées,
 elles sont créées par le calcul des différences entre l’état du répertoire à sauvegarder de l’ordinateur distant et la dernière sauvegarde effectuée.
