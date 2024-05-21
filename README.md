@@ -1,33 +1,42 @@
 # Incremental_backup
-Sauvegarde incrémentielle
+Ce script est un outil de sauvegarde à utiliser pour sauvegarder des machines distantes.
+Voici les différentes fonctions :
+  * Sauvegarde de fichiers distants à l'aide de Rsync via SSH.
+  * Sauvegarde de type incrémentielle.
+  * Vérifie et attend que la machine soit connectée au réseau pour initier la sauvegarde.
+  * Efface automatiquement les sauvegardes trop anciennes.
+  * Création de logs.
+  * Mise en place de notifications avec logger.
 
 ![sauvegarde](incr.png)
 
+Après une sauvegarde complète, les sauvegardes suivantes sauvegarderont seulement les données modifiées ou ajoutées,
+elles sont créées par le calcul des différences entre l’état du répertoire à sauvegarder de l’ordinateur distant et la dernière sauvegarde effectuée.
+
+Les fichiers inchangés sont visibles dans chaque sauvegarde par des liens physiques et ceux qui ont été modifiés seront les seuls à occuper de l’espace sur le disque,
+c'est l’option -–link-dest de la commande rsync qui est responsable de la création des liens physiques.
+
+Les fichiers supprimés sur le répertoire distant n'apparaitront pas dans le dossier de sauvegarde.
+
+## Exemple d'arborescence
+```
+daniel@tortue:~$ tree -L 3 .rsync_backups/
+.rsync_backups/
+└── PC_desktop
+    ├── 2024-05-21_10-00-01
+    │   ├── Applications
+    │   ├── Documents
+    │   ├── Music
+    │   ├── Nextcloud
+    │   └── Pictures
+    └── logs
+        └── 2024-05-21_10-00-01.log
+
+9 directories, 1 file
+```
+
 ## Configuration de cron
 ```
-daniel@tortue:~$ crontab -l
-# Edit this file to introduce tasks to be run by cron.
-# 
-# Each task to run has to be defined through a single line
-# indicating with different fields when the task will be run
-# and what command to run for the task
-# 
-# To define the time you can provide concrete values for
-# minute (m), hour (h), day of month (dom), month (mon),
-# and day of week (dow) or use '*' in these fields (for 'any').
-# 
-# Notice that tasks will be started based on the cron's system
-# daemon's notion of time and timezones.
-# 
-# Output of the crontab jobs (including errors) is sent through
-# email to the user the crontab file belongs to (unless redirected).
-# 
-# For example, you can run a backup of all your user accounts
-# at 5 a.m every week with:
-# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
-# 
-# For more information see the manual pages of crontab(5) and cron(8)
-# 
 # m h  dom mon dow   command
 00 18 * * * /home/daniel/incr_backup.sh
 ```
