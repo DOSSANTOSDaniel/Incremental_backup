@@ -1,5 +1,6 @@
 # Incremental_backup
 Ce script est un outil de sauvegarde à utiliser pour sauvegarder des machines distantes.
+
 Voici les différentes fonctions :
   * Sauvegarde de fichiers distants à l'aide de Rsync via SSH.
   * Sauvegarde de type incrémentielle.
