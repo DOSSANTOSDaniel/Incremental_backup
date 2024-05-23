@@ -34,37 +34,25 @@ set -o nounset
 set -o pipefail
 
 ### Fonctions ###
-# Si erreur supprime la sauvegarde en cours et ré-utilise la dernière sauvegarde.
+# Si erreur 
 error_backup() {
-  if [ -n "$backup_dir" ] && [ -n "$all_backups_dir" ]
-  then
-    rm -rf "$all_backups_dir/$backup_dir"
-  fi
-
-  if [ -L "${latest_link}.old" ]
-  then
-    mv -f "${latest_link}.old" "$latest_link"
-  else
-    rm -f "$latest_link"
-  fi
-  
   logger -t "$0" "Rsync_Backup --- Erreur pendant la sauvegarde sur la machine $remote_backup_target_ip !"
   exit 0
 }
 
 ### Variables ###
-remote_backup_target_dir="/cygdrive/c/Users/danny/"            # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
+remote_backup_target_dir="/cygdrive/c/Users/danny/"     # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
 remote_backup_target_ip="192.168.1.22"
 remote_backup_target_user="danny"
 remote_backup_target_port="22"
-remote_backup_target_name="PC_desktop"  # Nom de la machine a sauvegarder.
+remote_backup_target_name="PC_desktop"                  # Nom de la machine a sauvegarder.
 
 all_backups_dir="${HOME}/.rsync_backups/$remote_backup_target_name"  # Chemin où se trouvent toutes les sauvegardes de la machine distante.
-latest_link="${all_backups_dir}/.latest"                      # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde.
+latest_link="${all_backups_dir}/.latest"                # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde.
 backup_dir="$(date '+%F_%H-%M-%S')"
 current_date="$(echo "$backup_dir" | cut -d'_' -f1)"
-backup_log_file="${backup_dir}.log"                           # Nom du fichier de log.
-all_backups_log_dir="$all_backups_dir/logs"                   # Chemin du dossier contenant les logs.
+backup_log_file="${backup_dir}.log"                     # Nom du fichier de log.
+all_backups_log_dir="$all_backups_dir/logs"             # Chemin du dossier contenant les logs.
 
 # Exemples, supprime les sauvegarde anciennes de plus de ... ou égal à ...
 # 3 jours    : '3 days'
@@ -73,8 +61,8 @@ all_backups_log_dir="$all_backups_dir/logs"                   # Chemin du dossie
 # 1 ans      : '1 years'
 remove_old_backups='6 months'
 
-# Limitation de la band passante à 5mo/s maximum 
-limit_band="5m" 
+# Limitation de la band passante à 8mo/s maximum 
+limit_band="8m" 
 
 date_old_backups="$(date --date="$(date --date="$current_date - $remove_old_backups" +%Y-%m-%d)" +%s)"
 delbackups=""
@@ -121,12 +109,6 @@ rsync --archive -e "ssh -p $remote_backup_target_port" \
  --log-file="$all_backups_log_dir/$backup_log_file"
 
 sleep 5
-
-# Sauvegarder l'ancien lien, pour la récupération.
-if [ -L "$latest_link" ]
-then
-  mv -f "$latest_link" "${latest_link}.old"
-fi
 
 # Création du nouveau lien vers la dernière sauvegarde.
 ln -s "$all_backups_dir/$backup_dir" "$latest_link"
