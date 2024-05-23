@@ -17,7 +17,6 @@
 #   * Vérifie et attend que la machine soit connectée au réseau pour initier la sauvegarde.
 #   * Efface automatiquement les sauvegardes trop anciennes.
 #   * Création de logs.
-#   # Mise en place de notifications avec logger.
 #
 # Usage: ./incr_backup.sh
 #
