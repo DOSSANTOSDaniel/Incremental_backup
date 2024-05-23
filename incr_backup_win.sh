@@ -95,6 +95,7 @@ fi
 # --ignore-errors : Efface même s'il y a eu des erreurs E/S.
 # --link-dest : Répertoire utilisé pour la comparaison avec le répertoire source.
 # --bwlimit : Limite la bande passante.
+#  Applications/*** : Sauvegarde recursive sur le dossier Applications. 
 rsync --archive -e "ssh -p $remote_port" \
  --quiet \
  --delete \
