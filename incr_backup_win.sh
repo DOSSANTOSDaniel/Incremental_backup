@@ -35,18 +35,18 @@ set -o pipefail
 ### Fonctions ###
 # Si erreur 
 error_backup() {
-  logger -t "$0" "Rsync_Backup --- Erreur pendant la sauvegarde sur la machine $remote_backup_target_ip !"
+  logger -t "$0" "Rsync_Backup --- Erreur pendant la sauvegarde sur la machine $remote_ip !"
   exit 0
 }
 
 ### Variables ###
-remote_backup_target_dir="/cygdrive/c/Users/danny/"     # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
-remote_backup_target_ip="192.168.1.22"
-remote_backup_target_user="danny"
-remote_backup_target_port="22"
-remote_backup_target_name="PC_desktop"                  # Nom de la machine a sauvegarder.
+remote_dir="/cygdrive/c/Users/danny/"     # Chemin absolu du répertoire que nous voulons sauvegarder sur la machine distante.
+remote_ip="192.168.1.22"
+remote_user="danny"
+remote_port="22"
+remote_name="PC_desktop"                  # Nom de la machine a sauvegarder.
 
-all_backups_dir="${HOME}/.rsync_backups/$remote_backup_target_name"  # Chemin où se trouvent toutes les sauvegardes de la machine distante.
+all_backups_dir="${HOME}/.rsync_backups/$remote_name"   # Chemin où se trouvent toutes les sauvegardes de la machine distante.
 latest_link="${all_backups_dir}/.latest"                # Chemin du lien symbolique qui pointe toujours vers la dernière sauvegarde.
 backup_dir="$(date '+%F_%H-%M-%S')"
 current_date="$(echo "$backup_dir" | cut -d'_' -f1)"
@@ -74,13 +74,13 @@ time_interval_ping="900"
 trap error_backup ERR
 
 # Teste si la machine distante est connecté au réseau.
-while ! ping -c 1 -n -w 2 -q "$remote_backup_target_ip" &> /dev/null
+while ! ping -c 1 -n -w 2 -q "$remote_ip" &> /dev/null
 do
-  logger -t "$0" "Rsync_Backup --- la machine $remote_backup_target_ip est DOWN !"
+  logger -t "$0" "Rsync_Backup --- la machine $remote_ip est DOWN !"
   sleep "$time_interval_ping"
 done
 
-logger -t "$0" "Rsync_Backup --- Début de la sauvegarde sur la machine $remote_backup_target_ip !"
+logger -t "$0" "Rsync_Backup --- Début de la sauvegarde sur la machine $remote_ip !"
 
 # Création des différents dossiers
 # ~/.rsync_backups
@@ -95,7 +95,7 @@ fi
 # --ignore-errors : Efface même s'il y a eu des erreurs E/S.
 # --link-dest : Répertoire utilisé pour la comparaison avec le répertoire source.
 # --bwlimit : Limite la bande passante.
-rsync --archive -e "ssh -p $remote_backup_target_port" \
+rsync --archive -e "ssh -p $remote_port" \
  --quiet \
  --delete \
  --ignore-errors \
@@ -104,7 +104,7 @@ rsync --archive -e "ssh -p $remote_backup_target_port" \
  --include={"Applications/***","Documents/***","Music/***","Nextcloud/***","Pictures/***","Vidéos/***"} \
  --exclude="*" \
  --link-dest="$latest_link" \
- "${remote_backup_target_user}"@"${remote_backup_target_ip}":"${remote_backup_target_dir}" "$all_backups_dir/$backup_dir" \
+ "${remote_user}"@"${remote_ip}":"${remote_dir}" "$all_backups_dir/$backup_dir" \
  --log-file="$all_backups_log_dir/$backup_log_file"
 
 sleep 5
@@ -130,4 +130,4 @@ do
   fi
 done
 # Pour consulter les logs : "sudo grep 'Rsync_Backup' /var/log/syslog" ou  "journalctl --grep='Rsync_Backup'"
-logger -t "$0" "Rsync_Backup --- Fin de la sauvegarde sur la machine $remote_backup_target_ip !"
+logger -t "$0" "Rsync_Backup --- Fin de la sauvegarde sur la machine $remote_ip !"
