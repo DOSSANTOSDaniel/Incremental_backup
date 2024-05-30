@@ -111,6 +111,9 @@ rsync --archive -e "ssh -p $remote_port" \
 sleep 5
 
 # Création du nouveau lien vers la dernière sauvegarde.
+if [ -L $latest_link ]; then
+  rm $latest_link
+fi
 ln -s "$all_backups_dir/$backup_dir" "$latest_link"
 
 # Supprimer les sauvegardes trop anciennes.
